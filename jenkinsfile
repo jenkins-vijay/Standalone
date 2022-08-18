@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    stages{
+        stage('checkout') {
+            steps{
+                git 'https://github.com/zielotechgroup/maven-standalone-app.git'
+            }
+        }
+        stage('build') {
+            steps{
+                sh 'mvn -DskipTests clean package'
+            }
+            post{
+                always{
+                    archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
+                }
+            }
+        }
+        stage("Tests") {
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage("Dockerbuild and push") {
+            steps{
+                echo 'push and build'
+            }
+        }
+    }
